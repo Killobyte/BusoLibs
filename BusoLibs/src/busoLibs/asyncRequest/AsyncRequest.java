@@ -1,10 +1,27 @@
 /*
  * AsyncRequest.java
+ * 
  * Implements the class that makes asynchronous web requests
- * Copyright (C) Shawn Busolits, 2012 All Rights Reserved
+ * 
+ * Copyright 2012 Shawn Busolits
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may 
+ * not use this file except in compliance with the License. You may obtain a 
+ * copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT 
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
+ * License for the specific language governing permissions and limitations 
+ * under the License.
  */
 
 package busoLibs.asyncRequest;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -16,10 +33,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.List;
 
 /**
  * Makes asynchronous web requests
@@ -140,17 +153,19 @@ public class AsyncRequest extends Thread {
 		HttpClient httpclient = new DefaultHttpClient(httpParams);
 		HttpGet httpget = new HttpGet(url);
 
-		if(headers != null) {
-			for(NameValuePair header: headers) {
+		if (headers != null) {
+			for (NameValuePair header : headers) {
 				httpget.setHeader(header.getName(), header.getValue());
 			}
 		}
-		
+
 		try {
-			
+
 			HttpResponse response = httpclient.execute(httpget);
-			//Taken from http://stackoverflow.com/questions/2845599/how-do-i-parse-json-from-a-java-httpresponse
-			BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
+			// Taken from
+			// http://stackoverflow.com/questions/2845599/how-do-i-parse-json-from-a-java-httpresponse
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					response.getEntity().getContent(), "UTF-8"));
 			String result = reader.readLine();
 			callback.doOnResult(result);
 		} catch (Exception e) {
